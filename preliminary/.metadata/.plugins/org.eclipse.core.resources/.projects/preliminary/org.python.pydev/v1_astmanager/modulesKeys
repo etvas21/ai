@@ -1,0 +1,5 @@
+MODULES_MANAGER_V2
+Foundation.CheckEnv|/Users/hrkim/git/LinearRegression/preliminary/Foundation/CheckEnv.py
+Foundation.MethodLeastSquares|/Users/hrkim/git/LinearRegression/preliminary/Foundation/MethodLeastSquares.py
+Foundation.RootMeanSquareError|/Users/hrkim/git/LinearRegression/preliminary/Foundation/RootMeanSquareError.py
+Foundation.__init__|/Users/hrkim/git/LinearRegression/preliminary/Foundation/__init__.py

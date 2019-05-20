@@ -1,0 +1,34 @@
+-- VERSION_4
+-- START DISKCACHE_2
+/Users/hrkim/lab/ai/preliminary/.metadata/.plugins/org.eclipse.core.resources/.projects/preliminary/com.python.pydev.analysis/v2_indexcache
+Foundation.RootMeanSquareError|1558275478000000000|/Users/hrkim/git/LinearRegression/preliminary/Foundation/RootMeanSquareError.py
+Foundation.MethodLeastSquares|1558275478000000000|/Users/hrkim/git/LinearRegression/preliminary/Foundation/MethodLeastSquares.py
+Foundation.__init__|1558275478000000000|/Users/hrkim/git/LinearRegression/preliminary/Foundation/__init__.py
+Foundation.CheckEnv|1558276871000000000|/Users/hrkim/git/LinearRegression/preliminary/Foundation/CheckEnv.py
+-- END DISKCACHE
+-- START DICTIONARY
+3
+3=Foundation.RootMeanSquareError
+2=Foundation.MethodLeastSquares
+1=Foundation.CheckEnv
+-- END DICTIONARY
+-- START TREE 1
+14
+a|2|a!11@a!19@
+ab|1|ab!27@
+b|2|b!19@b!11@
+dat|1|data!27@
+div|2|dividend!19@divisor!19@
+hel|1|hello!11@
+mx|1|mx!19@
+my|1|my!19@
+pre|2|predict_result!27@Predict!26@
+rms|2|RmseVal!26@Rmse!26@
+ses|1|sess!11@
+top|1|Top!18@
+x|2|x!27@x!19@
+y|2|y!27@y!19@
+-- END TREE
+-- START TREE 2
+0
+-- END TREE
