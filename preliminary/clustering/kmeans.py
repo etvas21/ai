@@ -41,18 +41,10 @@ r = pd.concat([feature, predict],axis=1)
 plt.scatter(r['Sepal length'],r['Sepal width'],c=r['predict'],alpha=0.5)
 
 centers = pd.DataFrame(model.cluster_centers_,columns=['Sepal length','Sepal width'])
-
 center_x = centers['Sepal length']
-
 center_y = centers['Sepal width']
 
 plt.scatter(center_x,center_y,s=50,marker='D',c='r')
-
 plt.show()
-
-
-
-
-
 
 print('{0:=^50}'.format('End of source'))  
