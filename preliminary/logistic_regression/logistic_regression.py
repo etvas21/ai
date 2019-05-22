@@ -15,13 +15,13 @@ y_data = [ y_row[1] for y_row in data ]
 a= tf.Variable(tf.random_normal([1], dtype=tf.float64, seed=0))
 b= tf.Variable(tf.random_normal([1], dtype=tf.float64, seed=0))
 
-# y sigmoid 함수 방정식
+# HYPOTHESIS y sigmoid 함수 방정식
 y = 1/( 1+ np.e**( a * x_data + b))
 
-# loss를 구하는 함수
+# COST FUNCTION loss를 구하는 함수
 loss = - tf.reduce_mean( np.array(y_data)*tf.log(y)+( 1 - np.array(y_data)) * tf.log( 1- y))
 
-# 
+# LEARNING RATE
 learning_rate = 0.5
 
 # loss를 최소로하는 값 찾기
@@ -38,10 +38,4 @@ with tf.Session() as sess:
         if i % 6000 ==0:
             print("Epoch: %.f, loss = %.4f, 기울기 a = %.4f,  b = %.4f" % (i, sess.run(loss), sess.run(a), sess.run(b)))
 
-print('{0:=^50}'.format('End of source'))  
-
-            
-
-
-
-
+print('{0:=^50}'.format('End of source'))
