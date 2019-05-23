@@ -65,14 +65,28 @@ with tf.Session() as sess:
         
         if (i + 1) % 300 == 0:
             print("step=%d, a1=%.4f, a2=%.4f, b=%.4f, loss=%.4f" % (i + 1, a_[0], a_[1], b_, loss_))
+            w1 = a_[0]
+            w2 = a_[1]
+            bi = b_
+            
 
     print('{0:=^50}'.format('exploitation'))
     
-    # 어떻게 활용하는가
     new_x = np.array([7, 6.]).reshape(1, 2)  #[7, 6]은 각각 공부 시간과 과외 수업수.
     new_y = sess.run(y, feed_dict={X: new_x})
     
     print("공부 시간: %d, 개인 과외 수: %d" % (new_x[:,0], new_x[:,1]))
     print("합격 가능성: %6.2f %%" % (new_y*100))
-        
-    print('{0:=^50}'.format('End of source'))  
+    print('{0:=^50}'.format('End of source'))
+            
+with tf.Session() as ss: 
+    # 어떻게 활용하는가
+    #    y = 1/( 1+ np.e**( a * x_data + b))
+    #    y = tf.sigmoid(tf.matmul(X, a) + b)    
+    print('a1 = ', w1, ' a2 = ' , w2, ' bias = ' ,bi)
+    w = np.array([w1,w2])
+    yy = tf.sigmoid(tf.matmul(X,w)+bi)
+    
+    new_yy = ss.run(yy, feed_dict={X: new_x})
+    print("합격 가능성: %6.2f %%" % (new_yy*100))
+    print('{0:=^50}'.format('실제적용'))
