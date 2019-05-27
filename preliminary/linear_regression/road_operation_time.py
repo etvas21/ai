@@ -21,10 +21,13 @@ df_traffic = pd.read_csv('../data/EX_data_영업소간통행시간_201904_101_10
                  , names= col_headers
                  , dtype= col_dtypes
                  )
-
+                
 dfx = df_traffic.assign(week_day = pd.to_datetime(df_traffic['depature_day']).dt.weekday)
 dfx['lead_time'] = dfx['lead_time'] / 60
 dfx.drop(['depature_office','arrival_office','car_type','unused'],axis=1,inplace=True)
+
+dfx = dfx.loc[(dfx['week_day'] == 1)]     
+print(dfx)
 '''                                                   
 # print(df_traffic.columns)
 # car type
@@ -138,7 +141,7 @@ with tf.Session() as sess:
     w1 = 49
     w2 = 43
     b = 202
-    hyp = 0.0572 * x1 + 1.0576 * x2 + 10.5664
+    hyp = 9.2329 * x1 -0.2680 * x2 + 1.1639
     plt.plot(x1,x2,hyp)
     plt.show()
 
