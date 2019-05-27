@@ -17,19 +17,20 @@ df_traffic = pd.read_csv('../../../EX_data_영업소간통행시간_TCS_11_03_02
                  , dtype= col_dtypes
                  )
 
+print('{0:=^50}'.format('df_traffic.columns'))
 print(df_traffic.columns)
 # car type
 #    승용자(1종), 버스(2종), 화물차(3~12종)
-# 기흥:105, 서울:101
+# 기흥:105, 서울:101, 부산(경)639
 # depature_office를 str으로 read를 하고 filter를 '101'로 하면 filter가 되지 않아서
 # depature_office를 int64로 지정을 하고 처리하여 정상적으로 처리됨
 # 아마도, str로 읽으면 앞뒤에 space가 있는것 같음.
 #dfx = df_traffic.loc[df_traffic.car_type == '1']
 dfx = df_traffic.loc[(df_traffic['car_type'] == 1)
                      & (df_traffic['depature_office'] == 101)
-                     & (df_traffic['arrival_office'] == 105)]
+                     & (df_traffic['arrival_office'] == 639)]
 
-dfx.to_csv('../data/EX_data_영업소간통행시간_201904_101_105.txt', sep='|', header=False)  
+dfx.to_csv('../data/EX_data_영업소간통행시간_201904_101_639.txt', sep='|', header=False)  
 # Data Analysis
 '''
 1. read file
@@ -48,9 +49,9 @@ def check_head():
     
 def check_head_tail():
     # 처음 5줄 보기
-    print('{0:=^50}'.format('Analysis Data (head)'))  
+    print('{0:=^50}'.format('Analysis Data (head-5)'))  
     print(df_traffic.head(5))
-    print('{0:=^50}'.format('Analysis Data (tail)'))
+    print('{0:=^50}'.format('Analysis Data (tail-5)'))
     print(df_traffic.tail(5))
 
 def check_info():

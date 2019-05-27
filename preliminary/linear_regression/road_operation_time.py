@@ -3,7 +3,12 @@ Created on 2019. 5. 27.
 
 @author: HRKim
 '''
+import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
+import tensorflow as tf
+import datetime as dt
+
 
 col_headers= ["depature_day", "depature_time", "depature_office", "arrival_office", "car_type", "lead_time",'unused']
 col_dtypes = {'depature_day':'str', 'depature_time':'int64'
@@ -17,7 +22,9 @@ df_traffic = pd.read_csv('../data/EX_data_영업소간통행시간_201904_101_10
                  , dtype= col_dtypes
                  )
 
-print(df_traffic.columns)
+dfx = df_traffic.assign(week_day=0)
+
+# print(df_traffic.columns)
 # car type
 #    승용자(1종), 버스(2종), 화물차(3~12종)
 # 기흥:105, 서울:101
@@ -56,6 +63,18 @@ def check_info():
     # 각 정보별 특징을 더자세히( count, mean, std, max ..)
     print(df_traffic.describe())
 
+def append_weekend():
+    print('{0:=^50}'.format('convert week_day'))
+    
+    for i in range(len(dfx)):
+        dfx.iloc[i,7] = dt.datetime(int(dfx.iloc[i]['depature_day'][0:4])
+                                                    , int(dfx.iloc[i]['depature_day'][4:6])
+                                                    , int(dfx.iloc[i]['depature_day'][6:8])).weekday()
+        #dfx.iloc[i]['week_day'] = temp_int    ## 적용이 않됨.
+
+    
+    #print(dfx.info())
+    #print(dfx.describe())
 ####################################
 # learning
 ####################################
@@ -64,12 +83,20 @@ def check_info():
 ####################################
 # applying
 ####################################
-
-
+'''
 check_head()
 check_head_tail()
 check_info()
+'''
+append_weekend()
 
+
+plt.plot(dfx['depature_time'],dfx['lead_time'])
+
+plt.xlabel('depature time(hour)')
+plt.ylabel('lead time(minute)')
+
+plt.show()
 
 # HYPORTHESIS
 #    w1: 요일
@@ -77,7 +104,34 @@ check_info()
 #    w3: 기후 (0~1)
 #    w4: 공사 (0~1)
 #    hypothesis: 소요시간
-#hypothesis = w1*x1 + w2*x2 + b
+
+x1 = dfx['week_day']
+x2 = dfx['depature_time']
+h = dfx['lead_time']
+
+w1 = tf.Variable(tf.random_uniform([1], 0,10, dtype=tf.float64, seed=0))
+w2 = tf.Variable(tf.random_uniform([1], 0,10, dtype=tf.float64, seed=0))
+b = tf.Variable(tf.random_uniform([1], 0,100, dtype=tf.float64, seed=0))
+
+hypothesis =  w1 * x1 + w2 * x2 + b
+
+# RMSE
+rmse = tf.sqrt(tf.reduce_mean(tf.square( hypothesis - h )))
+
+# learning rate
+learning_rate = 0.1
+
+# Gradient Descent
+gradient_descent = tf.train.GradientDescentOptimizer(learning_rate).minimize(rmse)
+
+
+# 학습
+with tf.Session() as sess:
+    sess.run(tf.global_variables_initializer())
+    
+    for step in range(2001):
+        if step % 100 == 0:
+              print("Epoch: %.f, RMSE = %.04f, 기울기 a1 = %.4f, 기울기 a2 = %.4f, y절편 b = %.4f" % (step,sess.run(rmse),sess.run(w1),sess.run(w2),sess.run(b)))
 
 
 print('{0:=^50}'.format('End of source'))
