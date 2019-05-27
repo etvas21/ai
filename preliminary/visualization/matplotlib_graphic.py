@@ -26,6 +26,7 @@ print('{:=^50}'.format('df3'))
 print(df3)
 
 s1 = df3['ItemA']
+print(s1)
 ax1 = s1.plot()
 
 s2 = df2['ItemB']

@@ -22,8 +22,10 @@ df_traffic = pd.read_csv('../data/EX_data_영업소간통행시간_201904_101_10
                  , dtype= col_dtypes
                  )
 
-dfx = df_traffic.assign(week_day=0)
-
+dfx = df_traffic.assign(week_day = pd.to_datetime(df_traffic['depature_day']).dt.weekday)
+dfx['lead_time'] = dfx['lead_time'] / 60
+dfx.drop(['depature_office','arrival_office','car_type','unused'],axis=1,inplace=True)
+'''                                                   
 # print(df_traffic.columns)
 # car type
 #    승용자(1종), 버스(2종), 화물차(3~12종)
@@ -34,7 +36,6 @@ dfx = df_traffic.assign(week_day=0)
 #dfx = df_traffic.loc[df_traffic.car_type == '1']
 
 # Data Analysis
-'''
 1. read file
 2. Check shape, head
 3. Extract only the column need
@@ -70,11 +71,6 @@ def append_weekend():
         dfx.iloc[i,7] = dt.datetime(int(dfx.iloc[i]['depature_day'][0:4])
                                                     , int(dfx.iloc[i]['depature_day'][4:6])
                                                     , int(dfx.iloc[i]['depature_day'][6:8])).weekday()
-        #dfx.iloc[i]['week_day'] = temp_int    ## 적용이 않됨.
-
-    
-    #print(dfx.info())
-    #print(dfx.describe())
 ####################################
 # learning
 ####################################
@@ -88,15 +84,14 @@ check_head()
 check_head_tail()
 check_info()
 '''
-append_weekend()
+print(dfx.info())        
 
+#plt.plot(dfx['depature_time'],dfx['lead_time'])
 
-plt.plot(dfx['depature_time'],dfx['lead_time'])
+#plt.xlabel('depature time(hour)')
+#plt.ylabel('lead time(minute)')
 
-plt.xlabel('depature time(hour)')
-plt.ylabel('lead time(minute)')
-
-plt.show()
+#plt.show()
 
 # HYPORTHESIS
 #    w1: 요일
@@ -105,18 +100,22 @@ plt.show()
 #    w4: 공사 (0~1)
 #    hypothesis: 소요시간
 
-x1 = dfx['week_day']
-x2 = dfx['depature_time']
-h = dfx['lead_time']
+x1 = np.array(dfx['week_day'])
+x2 = np.array(dfx['depature_time'])
+h = np.array(dfx['lead_time'])
 
-w1 = tf.Variable(tf.random_uniform([1], 0,10, dtype=tf.float64, seed=0))
-w2 = tf.Variable(tf.random_uniform([1], 0,10, dtype=tf.float64, seed=0))
-b = tf.Variable(tf.random_uniform([1], 0,100, dtype=tf.float64, seed=0))
+w1 = tf.Variable(tf.random_uniform([1], 0,20, dtype=tf.float64, seed=0))
+w2 = tf.Variable(tf.random_uniform([1], 0,50, dtype=tf.float64, seed=0))
+b = tf.Variable(tf.random_uniform([1], 0,10, dtype=tf.float64, seed=0))
 
-hypothesis =  w1 * x1 + w2 * x2 + b
+
+print( 'x1 =' , type(x1), ' x2 = ', type(x2), '\nh = ', type(h), type(w1), type(w2))
+
+hyp =  w1 * x1 + w2 * x2 + b
+
 
 # RMSE
-rmse = tf.sqrt(tf.reduce_mean(tf.square( hypothesis - h )))
+rmse = tf.sqrt(tf.reduce_mean(tf.square( hyp - h )))
 
 # learning rate
 learning_rate = 0.1
@@ -129,9 +128,19 @@ gradient_descent = tf.train.GradientDescentOptimizer(learning_rate).minimize(rms
 with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
     
-    for step in range(2001):
+    for step in range(5001):
+        sess.run(gradient_descent)
+        
         if step % 100 == 0:
-              print("Epoch: %.f, RMSE = %.04f, 기울기 a1 = %.4f, 기울기 a2 = %.4f, y절편 b = %.4f" % (step,sess.run(rmse),sess.run(w1),sess.run(w2),sess.run(b)))
+              print("Epoch: %.f, RMSE = %.04f, 기울기 w1 = %.4f, 기울기 w2 = %.4f, y절편 b = %.4f" 
+                    % (step,sess.run(rmse),sess.run(w1),sess.run(w2),sess.run(b)))
+
+    w1 = 49
+    w2 = 43
+    b = 202
+    hyp = 0.0572 * x1 + 1.0576 * x2 + 10.5664
+    plt.plot(x1,x2,hyp)
+    plt.show()
 
 
 print('{0:=^50}'.format('End of source'))
