@@ -10,7 +10,7 @@ col_dtypes = {'depature_day':'str', 'depature_time':'int64'
              , "depature_office":'int64',"arrival_office":'int64'
              , "car_type":'int64', "lead_time":'float64', 'unused': 'str'}
 
-df_traffic = pd.read_csv('../data/EX_data_영업소간통행시간_201904_101_105.txt'
+df_traffic = pd.read_csv('../../../EX_data_영업소간통행시간_TCS_11_03_02_100100.txt'
                  , sep='|' 
                  , header=None
                  , names= col_headers
@@ -25,7 +25,11 @@ print(df_traffic.columns)
 # depature_office를 int64로 지정을 하고 처리하여 정상적으로 처리됨
 # 아마도, str로 읽으면 앞뒤에 space가 있는것 같음.
 #dfx = df_traffic.loc[df_traffic.car_type == '1']
+dfx = df_traffic.loc[(df_traffic['car_type'] == 1)
+                     & (df_traffic['depature_office'] == 101)
+                     & (df_traffic['arrival_office'] == 105)]
 
+dfx.to_csv('../data/EX_data_영업소간통행시간_201904_101_105.txt', sep='|', header=False)  
 # Data Analysis
 '''
 1. read file
@@ -70,6 +74,9 @@ check_head()
 check_head_tail()
 check_info()
 
+print('{0:=^50}'.format('dfx'))
+print(dfx.head(5))
+print(dfx.shape)
 
 # HYPORTHESIS
 #    w1: 요일
