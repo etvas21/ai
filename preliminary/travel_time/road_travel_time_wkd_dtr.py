@@ -38,19 +38,35 @@ df_traffic = pd.read_csv('../data/EX_data_영업소간통행시간_201904_101_10
 x = np.array(df_traffic[df_traffic['week_day']==1].loc[:,['depature_time']])
 y = np.array(df_traffic[df_traffic['week_day']==1].loc[:,['driving_time']])
 
-w = tf.Variable(tf.random_uniform([1], -10,10, dtype=tf.float32, seed=0))
+
+
+y = np.array(df_traffic.loc[:,['driving_time']])
+
+w0 = tf.Variable(tf.random_uniform([1], -10,10, dtype=tf.float32, seed=0))
+w1 = tf.Variable(tf.random_uniform([1], -10,10, dtype=tf.float32, seed=0))
+w2 = tf.Variable(tf.random_uniform([1], -10,10, dtype=tf.float32, seed=0))
+w3 = tf.Variable(tf.random_uniform([1], -10,10, dtype=tf.float32, seed=0))
+w4 = tf.Variable(tf.random_uniform([1], -10,10, dtype=tf.float32, seed=0))
+w5 = tf.Variable(tf.random_uniform([1], -10,10, dtype=tf.float32, seed=0))
+w6 = tf.Variable(tf.random_uniform([1], -10,10, dtype=tf.float32, seed=0))
+w7 = tf.Variable(tf.random_uniform([1], -10,10, dtype=tf.float32, seed=0))
+w8 = tf.Variable(tf.random_uniform([1], -10,10, dtype=tf.float32, seed=0))
+w9 = tf.Variable(tf.random_uniform([1], -10,10, dtype=tf.float32, seed=0))
+w10 = tf.Variable(tf.random_uniform([1], -10,10, dtype=tf.float32, seed=0))
+w11 = tf.Variable(tf.random_uniform([1], -10,10, dtype=tf.float32, seed=0))
+w12 = tf.Variable(tf.random_uniform([1], -10,10, dtype=tf.float32, seed=0))
+
 b = tf.Variable(tf.random_uniform([1], -10,10, dtype=tf.float32, seed=0))
 
-print(x)
-print(y)
-print( 'x =' , type(x), '\ny = ', type(y), '\nw = ', type(w), '\nb = ' ,type(b))
-print( 'x =' , x.shape, '\ny = ', y.shape, '\nw = ', w.shape, '\nb = ' ,b.shape)
 
-plt.plot(x,y)
-plt.show()
+#plt.plot(x,y)
+#plt.show()
 
 # HYPOTHESIS
-hyp =  w * x + b
+hyp =  ( w0 * x0 + w1 * x1 + w2 * x2 + w3 * x3 + w4 * x4 + w5 * x5 + w6 * x6   
+    + w7 * x7 + w8 * x8 + w9 * x9 + w10 * x10   
+    + w11 * x11 + w12 * x12 
+    + b )
 
 # RMSE
 rmse = tf.sqrt(tf.reduce_mean(tf.square( hyp - y )))
@@ -66,7 +82,7 @@ gradient_descent = tf.train.GradientDescentOptimizer(learning_rate).minimize(rms
 with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
     
-    for step in range(5000):
+    for step in range(1000):
         sess.run(gradient_descent)
         
         if step % 100 == 0:
