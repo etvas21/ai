@@ -14,7 +14,9 @@ from matplotlib import cm, font_manager
 # for font
 import common.sys_env as env
 
-day_nm = ['MON','TUE','WED','THU','FRI','SAT','SUN']
+env.set_matplotlib_font()
+
+day_nm = ['월','화','수','목','금','토','일']
 
 col_headers= ["depature_day", "depature_time", "week_day",'driving_time']
 col_dtypes = {'depature_day':'str', 'depature_time':'int64'
@@ -46,9 +48,26 @@ df_traffic = pd.read_csv('../data/EX_data_영업소간통행시간_201904_101_10
 #print(df_traffic['depature_day'].str.replace('2019',''))
 
 #print(df_traffic.groupby(['week_day','depature_time']).mean())
-dfx = df_traffic.reset_index().groupby(['week_day','depature_time'],as_index=False).mean()
+df_traffic_grp = df_traffic.reset_index().groupby(['week_day','depature_time'],as_index=False).mean()
 
-print(dfx)
+print(df_traffic_grp)
+
+#x = np.array(df_traffic_grp[df_traffic_grp['week_day']==1].loc[:,['depature_time']])
+#y = np.array(df_traffic_grp[df_traffic_grp['week_day']==1].loc[:,['driving_time']])
+
+linestyles = [ '-', '--', ':', '-.','-','--']
+for i_day in range(6):
+    plt.plot(np.array(df_traffic_grp[df_traffic_grp['week_day']==i_day].loc[:,['depature_time']])
+         , np.array(df_traffic_grp[df_traffic_grp['week_day']==i_day].loc[:,['driving_time']])
+        #, linewidth = i_day
+         , linestyle = linestyles[i_day]
+         , label=day_nm[i_day])
+plt.title('[고속도로_경부선]\n서울영업소에서 기흥영업소 까지 요일별 /시간별 평균 소요시간')    
+plt.xlabel('출발시간(시)')
+plt.ylabel('소요시간(분)')
+plt.legend()
+plt.grid(True)
+plt.show()
 
 sys.exit(1)
 ####################################
