@@ -8,6 +8,13 @@ import matplotlib.pyplot as plt
 import tensorflow as tf
 import datetime as dt
 import seaborn as sns
+import sys
+from mpl_toolkits.mplot3d import axes3d
+from matplotlib import cm, font_manager
+# for font
+import common.sys_env as env
+
+day_nm = ['MON','TUE','WED','THU','FRI','SAT','SUN']
 
 col_headers= ["depature_day", "depature_time", "week_day",'driving_time']
 col_dtypes = {'depature_day':'str', 'depature_time':'int64'
@@ -20,17 +27,30 @@ df_traffic = pd.read_csv('../data/EX_data_영업소간통행시간_201904_101_10
                  , dtype= col_dtypes
                  )
              
-             
 ####################################
 # review
 ####################################
-plt.plot(df_traffic['depature_time'],df_traffic['driving_time'])
+# 선택한 컬럼을 출력
+#print(df_traffic[['week_day','depature_time']])
 
-plt.xlabel('depature time(hour)')
-plt.ylabel('driving time(minute)')
+# 특정 키워드가 포함되어 있는 레코드필터링
+# 검색대상 컬럼이 문자열이어야 함.
+#weekdayss = ['20190101','20190102']
+#for weekday in weekdayss:
+#    rslt = df_traffic[df_traffic['depature_day'].str.contains(weekday)]
+#print(rslt.count())
 
-plt.show()
+#print(df_traffic.groupby(['week_day','depature_time']).sum())    
+#print(df_traffic.groupby(['week_day','depature_time']).count())
 
+#print(df_traffic['depature_day'].str.replace('2019',''))
+
+#print(df_traffic.groupby(['week_day','depature_time']).mean())
+dfx = df_traffic.reset_index().groupby(['week_day','depature_time'],as_index=False).mean()
+
+print(dfx)
+
+sys.exit(1)
 ####################################
 # declare
 ####################################
@@ -41,19 +61,33 @@ plt.show()
 #    w4: 공사 (0~1)
 #    hypothesis: 소요시간
 
-x_data = np.array(df_traffic.loc[:,['week_day','depature_time']].astype(float))
-y_data = np.array(df_traffic['driving_time'].astype(float))
 
+x_weekday = np.array(df_traffic.loc[:,['week_day']])
+x_depature_time = np.array(df_traffic.loc[:,['depature_time']])
+y_driving_time = np.array(df_traffic.loc[:,['driving_time']])
 
-# random_uniform : 정규분포 난수생성
-W = tf.Variable(tf.random_uniform([2,1], 0.0,50.0), dtype='float32')
+##########################################################
+#yy = 1.1002*xx[0] + 0.3198*xx[1]
 
-x_data = np.float32(x_data)
+env.set_matplotlib_font()
 
-hyp =  tf.matmul(x_data,W)
+plt.plot(x_depature_time,y_driving_time)
+
+plt.xlabel('출발시간')
+plt.ylabel('주행시간')
+
+plt.show()
+
+##########################################################
+
+w_weekday = tf.Variable(tf.random_uniform([1], 0.0,10.0), dtype='float32')
+w_depature_time = tf.Variable(tf.random_uniform([1], 0.0,30.0), dtype='float32')
+
+hyp = w_weekday * x_weekday + w_depature_time * x_depature_time 
 
 # RMSE
-rmse = tf.sqrt(tf.reduce_mean(tf.square( hyp - y_data )))
+rmse = tf.sqrt(tf.reduce_mean(tf.square( hyp - y_driving_time )))
+
 
 # learning rate
 learning_rate = 0.1
@@ -74,23 +108,10 @@ with tf.Session() as sess:
         
         if step % 100 == 0:
               print("Epoch: %.f, RMSE = %.04f, 기울기 w1 = %.4f, 기울기 w2 = %.4f"
-                    % (step,sess.run(rmse),sess.run(W[0]),sess.run(W[1])))
-    w0 = sess.run(W[0])
-    w1 = sess.run(W[1])
-#Epoch: 400, RMSE = 9.3132, 기울기 w1 = 1.7581, 기울기 w2 = 0.2608
-#Epoch: 4900, RMSE = 9.3132, 기울기 w1 = 1.7581, 기울기 w2 = 0.2608
-#Epoch: 4900, RMSE = 9.3132, 기울기 w1 = 1.9005, 기울기 w2 = 1.0219
-wgt = np.array([[w0[0]],[w1[0]]])
-hh  = tf.matmul(x_data,wgt)
-
-with tf.Session() as sgrp:     
-    sgrp.run(tf.global_variables_initializer())
-    
-    plt.plot(x_data,sgrp.run(hh))
-    
-    plt.legend(['A','B'])
-    plt.show()
+                    % (step,sess.run(rmse),sess.run(w_weekday),sess.run(w_depature_time)))
 
 
+
+#sys.exit(1)
 print('{0:=^50}'.format('End of source'))
 print(__file__)
