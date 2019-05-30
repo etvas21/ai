@@ -44,18 +44,18 @@ def preview_data(dfx):
 
     # 4. 자료구조 파악
     print('{0:=^50}'.format('Review data structure'))
-    print(df_traffic.info())
+    print(dfx.info())
 
     # 5. 숫자 데이터의 데이터 분포 확인
     print('{0:=^50}'.format('dscribe'))
-    print(df_traffic.describe())
+    print(dfx.describe())
     
     # 6. column, index 명칭 확인
     print('{0:=^50}'.format('df_traffic.columns.values'))
-    print(df_traffic.columns.values)
+    print(dfx.columns.values)
 
     print('{0:=^50}'.format('df_traffic.index.values'))
-    print(df_traffic.index.values)
+    print(dfx.index.values)
 
 def delete_column(dfx):
     # 7. delete unnecessary item
@@ -97,11 +97,12 @@ def change_value(dfx):
 def analysis_data(dfx):
     print('{0:=^50}'.format('Analysis data'))
     
-    missing_df = df_traffic.isnull()    
+    missing_df = dfx.isnull()    
     print(missing_df.head(5))
     
-    return dfx
-
+    #print('{0:=^50}'.format('isin(0)'))
+    #print(df_traffic.loc[df_traffic['lead_time'] <=0] )
+    
 def final_delete(dfx):
     print('{0:=^50}'.format('Delete column of new data file'))
 
@@ -117,13 +118,13 @@ df_traffic = delete_column(df_traffic)
 df_traffic = change_column_name(df_traffic)
 df_traffic = add_column(df_traffic)
 df_traffic = change_value(df_traffic)
-df_traffic = analysis_data(df_traffic)
+analysis_data(df_traffic)
 
 # filter data
 df_traffic = df_traffic.loc[(df_traffic['car_type'] == 1)
                             & (df_traffic['depature_office'] == 101)
-                            & (df_traffic['arrival_office'] == 105)]     
-
+                            & (df_traffic['arrival_office'] == 105)
+                            & (df_traffic['lead_time'] >0)]     
 
 # save file
 print('{0:=^50}'.format('New data file'))

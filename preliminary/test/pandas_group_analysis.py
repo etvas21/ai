@@ -43,3 +43,7 @@ b= df2.reset_index().groupby(['key1','key2'],as_index=False)['data1','data2'].me
 print('\n====b====\n',b)
 print('\n====b====\n',b['data2'])
 
+'''
+analytic function 다수 사용하기
+'''
+print('\n\n', df2.groupby(['key1','key2']).agg(['mean','count']))
