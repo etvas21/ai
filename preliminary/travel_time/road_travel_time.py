@@ -157,7 +157,7 @@ gradient_descent = tf.train.GradientDescentOptimizer(learning_rate).minimize(rms
 with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
     
-    for step in range(1000):
+    for step in range(2001):
         sess.run(gradient_descent)
         
         if step % 100 == 0:
