@@ -27,7 +27,7 @@ day_nm = ['월','화','수','목','금','토','일']
 df_traffic =  pd.DataFrame()            # 초기데이터 적재용
 df_traffic_analysis =  pd.DataFrame()   # 평균/합계등 통계용 데이터 적재용
 
-env.set_matplotlib_font()               # matplotlib를 이용하여 그래프 생성시 한글을 사용할 수 있게함.
+env.set_matplotlib_kor()               # matplotlib를 이용하여 그래프 생성시 한글을 사용할 수 있게함.
 
 
 def load_data(dfx):
@@ -72,6 +72,18 @@ def make_analysis_df(dfx):
       
     return dfg
 
+def view_3d_graphic(dfx):
+    fig = plt.figure(figsize=(12,12))
+    ax = fig.add_subplot(111, projection='3d')
+    ax.scatter(dfx.week_day, dfx.depature_time, dfx.driving_time)
+    ax.set_xlabel('요일')
+    ax.set_ylabel('출발시간')
+    ax.set_zlabel('소요시간')
+    ax.view_init(15,15)
+    
+    plt.show()
+    
+    
 def view_graphic_analysis(dfx):
     '''
         평균을 이용하여 그래프 그리기 
@@ -121,14 +133,16 @@ def view_graphic_raw(dfx):
 ####################################  
 df_traffic = load_data(df_traffic)
 
+view_3d_graphic(df_traffic)
+
 ###
-view_graphic_relplot(df_traffic)
-df_traffic = load_data(df_traffic)
+#view_graphic_relplot(df_traffic)
+#df_traffic = load_data(df_traffic)
 ###
 
-df_traffic_analysis = make_analysis_df(df_traffic)
-view_graphic_analysis(df_traffic_analysis)
-view_graphic_raw(df_traffic)
+#df_traffic_analysis = make_analysis_df(df_traffic)
+#view_graphic_analysis(df_traffic_analysis)
+#view_graphic_raw(df_traffic)
 
 ####################################
 # Linear Regression
@@ -141,8 +155,8 @@ w_weekday = tf.Variable(tf.random_uniform([1], 0.0,5.0), dtype='float32')
 w_depature_time = tf.Variable(tf.random_uniform([1], 0.0,5.0), dtype='float32')
 y_bias = tf.Variable(tf.random_uniform([1], 0.0,5.0), dtype='float32')
 
-hyp = w_weekday * x_weekday + w_depature_time * x_depature_time + y_bias 
-
+#hyp = w_weekday * x_weekday + w_depature_time * x_depature_time + y_bias 
+hyp = w_weekday * x_weekday + w_depature_time * x_depature_time + y_bias
 # RMSE-Root Means Square Error
 rmse = tf.sqrt(tf.reduce_mean(tf.square( hyp - y_driving_time )))
 
@@ -157,16 +171,20 @@ gradient_descent = tf.train.GradientDescentOptimizer(learning_rate).minimize(rms
 with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
     
-    for step in range(2001):
+    for step in range(5001):
         sess.run(gradient_descent)
         
         if step % 100 == 0:
               print("Epoch: %.f, RMSE = %.04f, w_weekday = %.4f, w_depature_time = %.4f, y_bias = %.4f"
                     % (step,sess.run(rmse),sess.run(w_weekday),sess.run(w_depature_time),sess.run(y_bias)))
 
-    print("\n\nhyp =%.4f * x_weekday + %.4f * x_depature_time + %.4f"
-            % (sess.run(w_weekday),sess.run(w_depature_time),sess.run(y_bias)))
-#Epoch: 9999, RMSE = 9.3508, w_weekday = 0.0572, w_depature_time = 1.0576, y_bias = 1.0576
+    print("\n\nhyp =%.4f * x_weekday + %.4f * x_depature_time + %.4f = %f w/3,9"
+            % (sess.run(w_weekday),sess.run(w_depature_time),sess.run(y_bias)
+            , sess.run(w_weekday)*3+sess.run(w_depature_time)*6 + sess.run(y_bias)))  # 26.474686
+    
+print(df_traffic.loc[(df_traffic['week_day'] == 3)
+                            & (df_traffic['depature_time'] == 6)])   
+
 print('{0:=^50}'.format('End of source'))
 print(__file__)
 #sys.exit(1)
