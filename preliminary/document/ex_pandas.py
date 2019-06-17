@@ -38,7 +38,8 @@ xdata = [ [201903, 90,86,93]
 xcol =['EVAL_YM', 'KOR', 'ENG', 'MATH']
 
 df = pd.DataFrame(data = xdata, columns = xcol)
-print('\n{0:[^3} {1} {0:]^3}\n{2}'.format('','Create DataFrame with list',df))
+xmsg = 'To create a DataFrame by specifying a column name in the list'
+print('\n{0:[^3} {1} {0:]^3}\n{2}'.format('' , xmsg , df))
 
 ###
 xdata = [ [201903, 90,86,93]
@@ -48,7 +49,8 @@ xcol = ['EVAL_YM', 'KOR', 'ENG', 'MATH']
 xidx =  ['one','two','three']
 
 df = pd.DataFrame(data = xdata, columns = xcol, index = xidx)
-print('\n{0:[^3} {1} {0:]^3}\n{2}'.format('','Create DataFrame with list',df))
+xmsg = 'To create a DataFrame by specifying a column name, index  in the list'
+print('\n{0:[^3} {1} {0:]^3}\n{2}'.format('', xmsg ,df))
 
 
 #CASE 2: nparray
