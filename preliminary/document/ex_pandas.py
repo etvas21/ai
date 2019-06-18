@@ -146,6 +146,10 @@ print('\n=== Case 3. After insert column with range===\n',df)
 df['KOR_GOOD'] = df.KOR > 90
 print('\n=== Case 4. df.KOR_GOOD ===\n',df)
 
+
+df['ENG_GOOD'] = df.apply(lambda x: x['ENG'] if x['ENG'] > 80 else 0)
+print('\n=== Case 4. df.ENG_GOOD ===\n',df)
+
 #
 # column 삭제
 #
