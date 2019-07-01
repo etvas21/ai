@@ -44,7 +44,7 @@ print('{0:=^50}'.format('exploration'))
 with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
 
-    for step in range(10001):
+    for step in range(15001):
         # run( fetches, feed_dict=None, options=None, run_metadata=None)
         # The value returned by run() has the same shape as the fetches argument,
         # where the leaves are replaced by the corresponding values returned by Tensorflow.
