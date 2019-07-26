@@ -106,9 +106,6 @@ df = pd.read_csv(xdata_file
                  , header = None )
 print('\n{0:[^3} {1} {0:]^3}\n{2}'.format('','Create DataFrame using file',df))
 
-
-
-sys.exit(1)
 #####################################
 # Dataframe 구조관리 ( Like DDL)
 #####################################
@@ -148,9 +145,10 @@ print('\n=== Case 3. After insert column with range===\n',df)
 df['KOR_GOOD'] = df.KOR > 90
 print('\n=== Case 4. df.KOR_GOOD ===\n',df)
 
-
-df['ENG_GOOD'] = df.apply(lambda x: x['ENG'] if x['ENG'] > 80 else 0)
-print('\n=== Case 4. df.ENG_GOOD ===\n',df)
+#df['ENG_GOOD'] = df.apply(lambda x: x['ENG'] if x['ENG'] > 80 else 0)
+df['ENG_GOOD'] = df['ENG'].apply(lambda x: 'A' if x > 90 else 'B')
+print('\n=== Case 5. df.ENG_GOOD ===\n',df)
+sys.exit(0)
 
 #
 # column 삭제

@@ -5,7 +5,7 @@ Created on 2019. 7. 25.
 '''
 import tensorflow as tf
 import numpy as np
-tf.enable_eager_execution()
+tf.enable_eager_execution() # 즉시실행
 
 # Data
 x_data = [1, 2, 3, 4, 5]
@@ -52,10 +52,12 @@ W_grad.numpy(), b_grad.numpy()
 # Update parameter
 learning_rate = 0.01
 
+# A.assign_sub(B)
+#  A = A - B  / A -= B
 W.assign_sub(learning_rate * W_grad)
 b.assign_sub(learning_rate * b_grad)
 
-W.numpy(), b.numpy()
+#??? W.numpy(), b.numpy()
 
 plt.plot(x_data, hypothesis.numpy(), 'r-')
 plt.plot(x_data, y_data, 'o')
